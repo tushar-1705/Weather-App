@@ -238,68 +238,23 @@ const getCity = () => {
     });
 };
 
-// const getUser = () => {
-//   navigator.geolocation.getCurrentPosition(position => {
-//     let {latitude, longitude} = position.coords;
-//     let REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${apiKey}`;
-    
-//     fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
-//       let {name, country, state} = data[0];
-//       getWeatherDetails(name, latitude, longitude, country, state);
-//     }).catch(() => {
-//       alert('Failed to fetch user coordinates');
-//     });
-//   }, error => {
-//     if(error.code === error.PERMISSION_DENIED){
-//       alert('Geolocation Permission Denied. Please reset location permission to grant access again');
-//     }
-//   })
-// }
-
 const getUser = () => {
-  if (!navigator.geolocation) {
-    alert("Geolocation is not supported by your browser.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      let { latitude, longitude } = position.coords;
-      let REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${apiKey}`;
-
-      fetch(REVERSE_GEOCODING_URL)
-        .then((res) => {
-          if (!res.ok) throw new Error(`API error: ${res.status}`);
-          return res.json();
-        })
-        .then((data) => {
-          if (!data || data.length === 0) {
-            throw new Error("No location data found");
-          }
-          let { name, country, state } = data[0];
-          getWeatherDetails(name, latitude, longitude, country, state);
-        })
-        .catch((err) => {
-          console.error("Reverse geocoding error:", err);
-          alert("Failed to fetch user coordinates. Check console for details.");
-        });
-    },
-    (error) => {
-      console.error("Geolocation error:", error);
-      if (error.code === error.PERMISSION_DENIED) {
-        alert(
-          "Geolocation permission denied. Please allow location access and refresh."
-        );
-      } else if (error.code === error.POSITION_UNAVAILABLE) {
-        alert("Location information is unavailable.");
-      } else if (error.code === error.TIMEOUT) {
-        alert("The request to get your location timed out.");
-      } else {
-        alert("An unknown geolocation error occurred.");
-      }
+  navigator.geolocation.getCurrentPosition(position => {
+    let {latitude, longitude} = position.coords;
+    let REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${apiKey}`;
+    
+    fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
+      let {name, country, state} = data[0];
+      getWeatherDetails(name, latitude, longitude, country, state);
+    }).catch(() => {
+      alert('Failed to fetch user coordinates');
+    });
+  }, error => {
+    if(error.code === error.PERMISSION_DENIED){
+      alert('Geolocation Permission Denied. Please reset location permission to grant access again');
     }
-  );
-};
+  })
+}
 
 
 searchBtn.addEventListener("click", getCity);
